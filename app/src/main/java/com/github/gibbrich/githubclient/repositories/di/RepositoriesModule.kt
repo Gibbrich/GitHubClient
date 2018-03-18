@@ -23,20 +23,6 @@ class RepositoriesModule(
 {
     @Provides
     @ActivityScope
-    fun provideGitHubAPI(retrofit: Retrofit): GitHubAPI
-    {
-        return retrofit.create(GitHubAPI::class.java)
-    }
-
-    @Provides
-    @ActivityScope
-    fun provideReposRemoteSource(gitHubAPI: GitHubAPI): IReposSource
-    {
-        return ReposRemoteSource(gitHubAPI)
-    }
-
-    @Provides
-    @ActivityScope
     fun provideView(): IRepositoriesContract.View
     {
         return view

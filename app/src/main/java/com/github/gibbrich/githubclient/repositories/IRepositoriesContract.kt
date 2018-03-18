@@ -1,7 +1,7 @@
 package com.github.gibbrich.githubclient.repositories
 
-import com.github.gibbrich.githubclient.IBasePresenter
-import com.github.gibbrich.githubclient.IBaseView
+import com.github.gibbrich.githubclient.base.IBasePresenter
+import com.github.gibbrich.githubclient.base.IBaseView
 import com.github.gibbrich.githubclient.model.repo.Repo
 
 /**
@@ -12,6 +12,7 @@ interface IRepositoriesContract
     interface Presenter: IBasePresenter
     {
         fun loadRepos()
+        fun onRepositoryClick(repo: Repo)
     }
 
     interface View: IBaseView<Presenter>
@@ -20,5 +21,6 @@ interface IRepositoriesContract
         fun setIndicatorLoading(isLoading: Boolean)
         fun setLoadingErrorVisibile(isVisible: Boolean)
         fun setNoReposViewVisibile(isVisible: Boolean)
+        fun showRepositoryDetails(repo: Repo)
     }
 }

@@ -12,7 +12,7 @@ import javax.inject.Singleton
  */
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
+@Component(modules = arrayOf(AppModule::class, DatabaseModule::class))
 interface AppComponent
 {
     fun plusLoginComponent(module: LoginModule): LoginComponent

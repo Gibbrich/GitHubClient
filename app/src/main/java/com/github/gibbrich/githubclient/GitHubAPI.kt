@@ -1,6 +1,6 @@
 package com.github.gibbrich.githubclient
 
-import com.github.gibbrich.githubclient.api.APIRepository
+import com.github.gibbrich.githubclient.api.APIRepo
 import io.reactivex.Flowable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -11,5 +11,5 @@ import retrofit2.http.Path
 interface GitHubAPI
 {
     @GET("/users/{user}/repos")
-    fun getRepositories(@Path("user") userName: String): Flowable<List<APIRepository>>
+    fun getRepositories(@Path("user") userName: String): Flowable<List<APIRepo>>
 }

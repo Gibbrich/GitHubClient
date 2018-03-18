@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.widget.Button
 import android.widget.Toast
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.github.gibbrich.githubclient.GitHubClientApplication
 import com.github.gibbrich.githubclient.R
 import com.github.gibbrich.githubclient.login.di.LoginModule
@@ -17,11 +19,9 @@ import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), ILoginContract.View
 {
-    @Inject
-    lateinit var presenter: LoginPresenter
-
-    private lateinit var loginEditText: TextInputEditText
-    private lateinit var loginButton: Button
+    @Inject lateinit var presenter: LoginPresenter
+    @BindView(R.id.loginEditText) lateinit var loginEditText: TextInputEditText
+    @BindView(R.id.loginButton) lateinit var loginButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -34,8 +34,7 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View
                 .plusLoginComponent(LoginModule(this))
                 .inject(this)
 
-        loginButton = findViewById(R.id.loginButton)
-        loginEditText = findViewById(R.id.loginEditText)
+        ButterKnife.bind(this)
     }
 
     override fun onResume()

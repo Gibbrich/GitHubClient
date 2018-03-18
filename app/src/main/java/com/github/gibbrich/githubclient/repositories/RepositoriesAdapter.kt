@@ -5,26 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.github.gibbrich.githubclient.R
+import com.github.gibbrich.githubclient.base.BaseAdapter
 import com.github.gibbrich.githubclient.model.repo.Repo
 
 /**
  * Created by Dvurechenskiyi on 15.03.2018.
  */
-class RepositoriesAdapter(repos: List<Repo>) : RecyclerView.Adapter<RepositoryViewHolder>()
+class RepositoriesAdapter(repos: List<Repo>) : BaseAdapter<Repo, RepositoryViewHolder>(repos)
 {
-    var repos = repos
-        set(value)
-        {
-            field = value
-            notifyDataSetChanged()
-        }
-
-    override fun getItemCount() = repos.size
-
     override fun onBindViewHolder(holder: RepositoryViewHolder, position: Int)
     {
-        holder.repositoryName.text = repos[position].name
+        super.onBindViewHolder(holder, position)
+
+        val repo = data[position]
+
+        holder.repositoryName.text = repo.name
+        holder.forksCount.text = repo.forksCount.toString()
+        holder.watchersCount.text = repo.watchersCount.toString()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepositoryViewHolder
@@ -36,5 +36,12 @@ class RepositoriesAdapter(repos: List<Repo>) : RecyclerView.Adapter<RepositoryVi
 
 class RepositoryViewHolder(root: View) : RecyclerView.ViewHolder(root)
 {
-    val repositoryName: TextView = root.findViewById(R.id.repositoryName)
+    @BindView(R.id.repositoryName) lateinit var repositoryName: TextView
+    @BindView(R.id.forksCount) lateinit var forksCount: TextView
+    @BindView(R.id.watchersCount) lateinit var watchersCount: TextView
+
+    init
+    {
+        ButterKnife.bind(this, root)
+    }
 }

@@ -1,5 +1,10 @@
 package com.github.gibbrich.githubclient.di
 
+import android.arch.persistence.room.Room
+import android.content.Context
+import com.github.gibbrich.githubclient.AppDatabase
+import com.github.gibbrich.githubclient.GitHubAPI
+import com.github.gibbrich.githubclient.model.repo.source.RepoDao
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -12,7 +17,7 @@ import javax.inject.Singleton
  */
 
 @Module
-class AppModule
+class AppModule(private val context: Context)
 {
     @Provides
     @Singleton
@@ -24,5 +29,19 @@ class AppModule
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApplicationContext(): Context
+    {
+        return context
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubAPI(retrofit: Retrofit): GitHubAPI
+    {
+        return retrofit.create(GitHubAPI::class.java)
     }
 }

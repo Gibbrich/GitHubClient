@@ -9,4 +9,7 @@ import io.reactivex.Flowable
 interface IReposSource
 {
     fun getRepos(userName: String): Flowable<List<Repo>>
+    fun deleteAllRepos()
+    fun saveAllRepos(repos: List<Repo>)
+    fun invalidateData()
 }

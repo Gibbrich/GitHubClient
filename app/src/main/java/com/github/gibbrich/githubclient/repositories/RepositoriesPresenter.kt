@@ -1,8 +1,11 @@
 package com.github.gibbrich.githubclient.repositories
 
+import com.github.gibbrich.githubclient.base.BasePresenter
+import com.github.gibbrich.githubclient.model.repo.Repo
 import com.github.gibbrich.githubclient.model.repo.source.IReposSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -12,18 +15,11 @@ class RepositoriesPresenter(
         private val view: IRepositoriesContract.View,
         private val reposSource: IReposSource,
         private val userName: String
-) : IRepositoriesContract.Presenter
+) : BasePresenter(), IRepositoriesContract.Presenter
 {
-    private val disposables: CompositeDisposable = CompositeDisposable()
-
     override fun subscribe()
     {
         loadRepos()
-    }
-
-    override fun unsubscribe()
-    {
-        disposables.clear()
     }
 
     override fun loadRepos()
@@ -52,5 +48,10 @@ class RepositoriesPresenter(
                 )
 
         disposables.add(disposable)
+    }
+
+    override fun onRepositoryClick(repo: Repo)
+    {
+        view.showRepositoryDetails(repo)
     }
 }

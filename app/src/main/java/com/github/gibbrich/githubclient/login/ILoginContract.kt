@@ -1,8 +1,7 @@
 package com.github.gibbrich.githubclient.login
 
-import com.github.gibbrich.githubclient.IBasePresenter
-import com.github.gibbrich.githubclient.IBaseView
-import io.reactivex.disposables.Disposable
+import com.github.gibbrich.githubclient.base.IBasePresenter
+import com.github.gibbrich.githubclient.base.IBaseView
 
 /**
  * Created by Артур on 14.03.2018.
@@ -11,7 +10,6 @@ interface ILoginContract
 {
     interface Presenter: IBasePresenter
     {
-        fun addDisposable(disposable: Disposable)
         fun onLoginChanged(login: String)
         fun onLogin()
     }
