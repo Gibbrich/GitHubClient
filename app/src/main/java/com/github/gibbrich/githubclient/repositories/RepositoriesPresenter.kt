@@ -24,12 +24,12 @@ class RepositoriesPresenter(
 
     override fun loadRepos()
     {
-        view.setIndicatorLoading(true)
+        view.setLoadingIndicator(true)
 
         val disposable = reposSource.getRepos(userName)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doFinally { view.setIndicatorLoading(false) }
+                .doFinally { view.setLoadingIndicator(false) }
                 .subscribe(
                         {
                             if (it.isEmpty())
@@ -43,7 +43,7 @@ class RepositoriesPresenter(
                         },
                         {
                             it.printStackTrace()
-                            view.setLoadingErrorVisibile(true)
+                            view.setLoadingError(true)
                         }
                 )
 

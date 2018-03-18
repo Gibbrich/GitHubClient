@@ -9,6 +9,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.github.gibbrich.githubclient.GitHubClientApplication
 import com.github.gibbrich.githubclient.R
+import com.github.gibbrich.githubclient.base.BaseActivity
 import com.github.gibbrich.githubclient.login.di.LoginModule
 import com.github.gibbrich.githubclient.repositories.RepositoriesActivity
 import com.jakewharton.rxbinding2.view.RxView
@@ -17,9 +18,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class LoginActivity : AppCompatActivity(), ILoginContract.View
+class LoginActivity : BaseActivity<ILoginContract.Presenter>(), ILoginContract.View
 {
-    @Inject lateinit var presenter: LoginPresenter
+    @Inject override lateinit var presenter: ILoginContract.Presenter
     @BindView(R.id.loginEditText) lateinit var loginEditText: TextInputEditText
     @BindView(R.id.loginButton) lateinit var loginButton: Button
 
@@ -28,13 +29,13 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        ButterKnife.bind(this)
+
         GitHubClientApplication
                 .INSTANCE
                 .appComponent
                 .plusLoginComponent(LoginModule(this))
                 .inject(this)
-
-        ButterKnife.bind(this)
     }
 
     override fun onResume()
@@ -52,15 +53,6 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { presenter.onLoginChanged(it.toString()) }
         presenter.addDisposable(disposable)
-
-        presenter.subscribe()
-    }
-
-    override fun onPause()
-    {
-        super.onPause()
-
-        presenter.unsubscribe()
     }
 
     override fun setButtonEnabled(isEnabled: Boolean)
@@ -72,5 +64,10 @@ class LoginActivity : AppCompatActivity(), ILoginContract.View
     {
         val intent = RepositoriesActivity.getInstance(this, loginEditText.text.toString())
         startActivity(intent)
+    }
+
+    override fun showLoginError()
+    {
+        Toast.makeText(this, "Error occurred during login", Toast.LENGTH_SHORT).show()
     }
 }

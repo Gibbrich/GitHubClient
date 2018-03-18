@@ -18,5 +18,6 @@ interface ILoginContract
     {
         fun setButtonEnabled(isEnabled: Boolean)
         fun showRepositories()
+        fun showLoginError()
     }
 }

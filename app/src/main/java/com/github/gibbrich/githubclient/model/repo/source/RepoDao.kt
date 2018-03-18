@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.github.gibbrich.githubclient.model.repo.Repo
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 /**
  * Created by Артур on 17.03.2018.
@@ -25,4 +26,7 @@ interface RepoDao
 
     @Query("DELETE FROM Repositories")
     fun deleteAllRepos()
+
+    @Query("SELECT * FROM Repositories WHERE id = :id")
+    fun getRepo(id: Int): Maybe<Repo>
 }

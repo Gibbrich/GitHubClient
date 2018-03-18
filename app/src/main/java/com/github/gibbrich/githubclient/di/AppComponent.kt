@@ -4,6 +4,8 @@ import com.github.gibbrich.githubclient.login.di.LoginComponent
 import com.github.gibbrich.githubclient.login.di.LoginModule
 import com.github.gibbrich.githubclient.repositories.di.RepositoriesComponent
 import com.github.gibbrich.githubclient.repositories.di.RepositoriesModule
+import com.github.gibbrich.githubclient.repositoryDetail.di.RepositoryDetailComponent
+import com.github.gibbrich.githubclient.repositoryDetail.di.RepositoryDetailModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -17,4 +19,5 @@ interface AppComponent
 {
     fun plusLoginComponent(module: LoginModule): LoginComponent
     fun plusRepositoriesComponent(module: RepositoriesModule): RepositoriesComponent
+    fun plusRepositoryDetailComponent(module: RepositoryDetailModule): RepositoryDetailComponent
 }

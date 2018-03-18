@@ -1,19 +1,23 @@
 package com.github.gibbrich.githubclient.model.repo.source
 
+import com.github.gibbrich.githubclient.model.base.BaseRepository
 import com.github.gibbrich.githubclient.model.repo.Repo
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 /**
  * Created by Артур on 17.03.2018.
  */
 class RepoRepository(
-        private val localSource: IReposSource,
-        private val remoteSource: IReposSource
-): IReposSource
+        localSource: IReposSource,
+        remoteSource: IReposSource
+): BaseRepository<Repo, IReposSource>(localSource, remoteSource), IReposSource
 {
-    private val cache: MutableMap<Int, Repo> = HashMap()
-
-    private var isCacheDirty = true
+    override fun getRepo(id: Int): Maybe<Repo>
+    {
+        // todo consider using cache and remote
+        return localSource.getRepo(id)
+    }
 
     override fun getRepos(userName: String): Flowable<List<Repo>>
     {
@@ -46,10 +50,5 @@ class RepoRepository(
     {
         repos.forEach { cache.put(it.hashCode(), it) }
         localSource.saveAllRepos(repos)
-    }
-
-    override fun invalidateData()
-    {
-        isCacheDirty = true
     }
 }

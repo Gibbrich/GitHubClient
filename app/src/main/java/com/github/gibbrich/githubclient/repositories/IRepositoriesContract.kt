@@ -2,6 +2,7 @@ package com.github.gibbrich.githubclient.repositories
 
 import com.github.gibbrich.githubclient.base.IBasePresenter
 import com.github.gibbrich.githubclient.base.IBaseView
+import com.github.gibbrich.githubclient.base.ILoadingState
 import com.github.gibbrich.githubclient.model.repo.Repo
 
 /**
@@ -15,11 +16,9 @@ interface IRepositoriesContract
         fun onRepositoryClick(repo: Repo)
     }
 
-    interface View: IBaseView<Presenter>
+    interface View: IBaseView<Presenter>, ILoadingState
     {
         fun showRepos(repos: List<Repo>)
-        fun setIndicatorLoading(isLoading: Boolean)
-        fun setLoadingErrorVisibile(isVisible: Boolean)
         fun setNoReposViewVisibile(isVisible: Boolean)
         fun showRepositoryDetails(repo: Repo)
     }

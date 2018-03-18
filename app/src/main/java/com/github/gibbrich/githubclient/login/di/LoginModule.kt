@@ -3,6 +3,7 @@ package com.github.gibbrich.githubclient.login.di
 import com.github.gibbrich.githubclient.di.ActivityScope
 import com.github.gibbrich.githubclient.login.ILoginContract
 import com.github.gibbrich.githubclient.login.LoginPresenter
+import com.github.gibbrich.githubclient.model.user.source.IUserSource
 import dagger.Module
 import dagger.Provides
 
@@ -18,5 +19,8 @@ class LoginModule(private val view: ILoginContract.View)
 
     @Provides
     @ActivityScope
-    fun provideLoginPresenter() = LoginPresenter(view)
+    fun provideLoginPresenter(userSource: IUserSource): ILoginContract.Presenter
+    {
+        return LoginPresenter(view, userSource)
+    }
 }

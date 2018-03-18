@@ -2,6 +2,8 @@ package com.github.gibbrich.githubclient.model.repo
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.github.gibbrich.githubclient.api.APIRepo
+import com.github.gibbrich.githubclient.model.base.SimpleIDObject
 import java.util.*
 
 /**
@@ -10,35 +12,31 @@ import java.util.*
 
 @Entity(tableName = "Repositories")
 class Repo(
-        @PrimaryKey val id: Int,
-        val name: String
-)
+        id: Int,
+        name: String
+) : SimpleIDObject(id, name)
 {
     var forksCount: Int = 0
     var watchersCount: Int = 0
+    var isPrivate = false
+    var openIssuesCount = 0
+    var language: String? = null
+    var size = 0
+    lateinit var createdDate: String // todo move to date after switching APIRepo createdDate to Date
 
-    override fun equals(other: Any?): Boolean
+    companion object
     {
-        if (other == null)
+        fun createFromAPI(apiRepo: APIRepo): Repo
         {
-            return false
+            return Repo(apiRepo.id, apiRepo.name).apply {
+                forksCount = apiRepo.forksCount
+                watchersCount = apiRepo.watchersCount
+                isPrivate = apiRepo.isPrivate
+                openIssuesCount = apiRepo.openIssuesCount
+                language = apiRepo.language
+                size = apiRepo.size
+                createdDate = apiRepo.createdDate
+            }
         }
-
-        if (this === other)
-        {
-            return true
-        }
-
-        if (other !is Repo)
-        {
-            return false
-        }
-
-        return id == other.id
-    }
-
-    override fun hashCode(): Int
-    {
-        return Objects.hash(Repo::class.java.simpleName, id)
     }
 }

@@ -12,13 +12,15 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.github.gibbrich.githubclient.GitHubClientApplication
 import com.github.gibbrich.githubclient.R
+import com.github.gibbrich.githubclient.base.BaseActivity
 import com.github.gibbrich.githubclient.model.repo.Repo
 import com.github.gibbrich.githubclient.repositories.di.RepositoriesModule
+import com.github.gibbrich.githubclient.repositoryDetail.RepositoryDetailActivity
 import javax.inject.Inject
 
-class RepositoriesActivity : AppCompatActivity(), IRepositoriesContract.View
+class RepositoriesActivity : BaseActivity<IRepositoriesContract.Presenter>(), IRepositoriesContract.View
 {
-    @Inject lateinit var presenter: IRepositoriesContract.Presenter
+    @Inject override lateinit var presenter: IRepositoriesContract.Presenter
     @Inject lateinit var adapter: RepositoriesAdapter
     @BindView(R.id.repositoriesList) lateinit var repositoriesList: RecyclerView
 
@@ -27,7 +29,7 @@ class RepositoriesActivity : AppCompatActivity(), IRepositoriesContract.View
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_repositories)
 
-        val userName = intent.extras.getString(EXTRA_USER_NAME) ?: throw IllegalStateException("Intent must contain EXTRA_USER_NAME")
+        val userName = intent.extras.getString(EXTRA_USER_NAME) ?: throw IllegalArgumentException("Intent must contain EXTRA_USER_NAME")
 
         GitHubClientApplication
                 .INSTANCE
@@ -50,15 +52,6 @@ class RepositoriesActivity : AppCompatActivity(), IRepositoriesContract.View
         val disposable = adapter.itemViewClickSubject
                 .subscribe { presenter.onRepositoryClick(it) }
         presenter.addDisposable(disposable)
-
-        presenter.subscribe()
-    }
-
-    override fun onPause()
-    {
-        super.onPause()
-
-        presenter.unsubscribe()
     }
 
     override fun showRepos(repos: List<Repo>)
@@ -66,14 +59,14 @@ class RepositoriesActivity : AppCompatActivity(), IRepositoriesContract.View
         adapter.data = repos
     }
 
-    override fun setIndicatorLoading(isLoading: Boolean)
+    override fun setLoadingError(isVisible: Boolean)
     {
-        Toast.makeText(this, "setIndicatorLoading stub", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "setLoadingError stub", Toast.LENGTH_SHORT).show()
     }
 
-    override fun setLoadingErrorVisibile(isVisible: Boolean)
+    override fun setLoadingIndicator(isVisible: Boolean)
     {
-        Toast.makeText(this, "setLoadingErrorVisibile stub", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "setLoadingIndicator stub", Toast.LENGTH_SHORT).show()
     }
 
     override fun setNoReposViewVisibile(isVisible: Boolean)
@@ -83,7 +76,8 @@ class RepositoriesActivity : AppCompatActivity(), IRepositoriesContract.View
 
     override fun showRepositoryDetails(repo: Repo)
     {
-        Toast.makeText(this, "${repo.name} clicked", Toast.LENGTH_SHORT).show()
+        val intent = RepositoryDetailActivity.getIntent(this, repo.id)
+        startActivity(intent)
     }
 
     companion object

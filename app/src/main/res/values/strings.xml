@@ -2,4 +2,7 @@
     <string name="app_name">GithubClient</string>
     <string name="username">Username</string>
     <string name="login">Login</string>
+    <string name="issues">Issues</string>
+    <string name="branches">Branches</string>
+    <string name="owner">Owner</string>
 </resources>
