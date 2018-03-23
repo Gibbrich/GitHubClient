@@ -1,8 +1,8 @@
 package com.github.gibbrich.githubclient.login
 
 import com.github.gibbrich.githubclient.base.BasePresenter
-import com.github.gibbrich.githubclient.model.user.User
-import com.github.gibbrich.githubclient.model.user.source.IUserSource
+import com.github.gibbrich.githubclient.login.domain.useCase.Login
+import com.github.gibbrich.githubclient.login.domain.useCase.LoginRequestValue
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 
 class LoginPresenter(
         private val view: ILoginContract.View,
-        private val userSource: IUserSource
+        val login: Login
 ): BasePresenter(), ILoginContract.Presenter
 {
     private lateinit var userName: String
@@ -29,16 +29,10 @@ class LoginPresenter(
 
     override fun onLogin()
     {
-        val disposable = userSource.getUser(userName)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+        val disposable = login.execute(LoginRequestValue(userName))
                 .subscribe(
-                        {
-                            view.showRepositories()
-                        },
-                        {
-                            view.showLoginError()
-                        }
+                        { view.showRepositories() },
+                        { view.showLoginError() }
                 )
 
         disposables.add(disposable)

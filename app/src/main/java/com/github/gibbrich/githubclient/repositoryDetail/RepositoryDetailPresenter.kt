@@ -1,7 +1,8 @@
 package com.github.gibbrich.githubclient.repositoryDetail
 
 import com.github.gibbrich.githubclient.base.BasePresenter
-import com.github.gibbrich.githubclient.model.repo.source.IReposSource
+import com.github.gibbrich.githubclient.repositoryDetail.domain.useCase.GetRepo
+import com.github.gibbrich.githubclient.repositoryDetail.domain.useCase.GetRepoRequestValue
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -10,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class RepositoryDetailPresenter(
         private val view: IRepositoryDetailContract.View,
-        private val repositorySource: IReposSource,
+        private val getRepo: GetRepo,
         private val repositoryId: Int
 ): BasePresenter(), IRepositoryDetailContract.Presenter
 {
@@ -22,9 +23,7 @@ class RepositoryDetailPresenter(
     {
         view.setLoadingIndicator(true)
 
-        val disposable = repositorySource.getRepo(repositoryId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        val disposable = getRepo.execute(GetRepoRequestValue(repositoryId))
                 .doFinally { view.setLoadingIndicator(false) }
                 .subscribe(
                         {

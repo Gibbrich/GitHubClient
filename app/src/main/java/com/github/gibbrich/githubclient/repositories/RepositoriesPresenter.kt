@@ -2,10 +2,9 @@ package com.github.gibbrich.githubclient.repositories
 
 import com.github.gibbrich.githubclient.base.BasePresenter
 import com.github.gibbrich.githubclient.model.repo.Repo
-import com.github.gibbrich.githubclient.model.repo.source.IReposSource
+import com.github.gibbrich.githubclient.repositories.domain.useCase.GetRepos
+import com.github.gibbrich.githubclient.repositories.domain.useCase.GetReposRequestValue
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -13,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class RepositoriesPresenter(
         private val view: IRepositoriesContract.View,
-        private val reposSource: IReposSource,
+        private val getRepos: GetRepos,
         private val userName: String
 ) : BasePresenter(), IRepositoriesContract.Presenter
 {
@@ -26,9 +25,7 @@ class RepositoriesPresenter(
     {
         view.setLoadingIndicator(true)
 
-        val disposable = reposSource.getRepos(userName)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
+        val disposable = getRepos.execute(GetReposRequestValue(userName))
                 .doFinally { view.setLoadingIndicator(false) }
                 .subscribe(
                         {

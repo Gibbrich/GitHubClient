@@ -1,15 +1,15 @@
 package com.github.gibbrich.githubclient.repositories.di
 
-import com.github.gibbrich.githubclient.GitHubAPI
 import com.github.gibbrich.githubclient.di.ActivityScope
 import com.github.gibbrich.githubclient.model.repo.source.IReposSource
-import com.github.gibbrich.githubclient.model.repo.source.ReposRemoteSource
 import com.github.gibbrich.githubclient.repositories.IRepositoriesContract
 import com.github.gibbrich.githubclient.repositories.RepositoriesAdapter
 import com.github.gibbrich.githubclient.repositories.RepositoriesPresenter
+import com.github.gibbrich.githubclient.repositories.domain.useCase.GetRepos
 import dagger.Module
 import dagger.Provides
-import retrofit2.Retrofit
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by Dvurechenskiyi on 15.03.2018.
@@ -32,7 +32,8 @@ class RepositoriesModule(
     @ActivityScope
     fun providePresenter(reposSource: IReposSource): IRepositoriesContract.Presenter
     {
-        return RepositoriesPresenter(view, reposSource, userName)
+        val getRepos = GetRepos(Schedulers.computation(), AndroidSchedulers.mainThread(), reposSource)
+        return RepositoriesPresenter(view, getRepos, userName)
     }
 
     @Provides
